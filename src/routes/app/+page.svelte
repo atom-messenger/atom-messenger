@@ -36,7 +36,7 @@
     <title>Home | Atom</title>
 </svelte:head>
 
-<div class = "flex my-2.5 px-1.5 py-1.5 justify-center">
+<div class = "flex items-center justify-center border-2 border-white my-2.5 px-1.5 py-1.5 ">
     <Dialog.Root>
         <Dialog.Trigger>
             <ServerButton name = "Create Server" />
@@ -55,7 +55,7 @@
     </Dialog.Root>
     {#each data.user.joined as server}
         <a data-sveltekit-reload href = "/app/{server.id}">
-            <ServerButton name = {server.name} />
+            <ServerButton image = {server.image} name = {server.name} />
         </a>
     {/each}
 </div>

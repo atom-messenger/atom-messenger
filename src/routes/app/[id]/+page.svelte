@@ -32,11 +32,13 @@
         observer.observe(feedElement, { childList: true });
     });
 
+    // send a message to the server
     function send(e) {
         socket.emit("message", { server: data.server.id, author: data.user.id, text: e.target.message.value });
         e.target.message.value = "";
     }
 
+    // leaving a server if user isn't the owner
     async function leave() {
         if (data.server.owner == data.user.id) {
             alert("You can't leave your own server!");
@@ -45,6 +47,22 @@
                 server: data.server.id
             }, "/");
         }
+    }
+
+    // uploading an image for the server
+    async function uploadImage(e) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = async () => {
+            await fetch_api("/api/server/image", {
+                server: data.server.id,
+                image: reader.result
+            });
+        };
+        reader.readAsDataURL(file);
+
+        window.location.reload();
     }
 
     const sideBox = "lg:mx-7 lg:my-0 lg:h-full my-5 overflow-auto";
@@ -74,7 +92,7 @@
             <Card.Content class = "lg:block flex justify-center">
                 {#each data.user.joined as server}
                     <a data-sveltekit-reload href = "/app/{server.id}" class = "block text-center lg:mb-2.5">
-                        <ServerButton name = {server.name} />
+                        <ServerButton image = {server.image} name = {server.name} />
                     </a>
                 {/each}
             </Card.Content>
@@ -140,8 +158,8 @@
                             </DropdownMenu.Content>
                         </DropdownMenu.Root>
                     {:else}
-                        <Input value = {data.server.name} class = "mr-auto text-2xl w-fit" />
-                        <Button variant = "outline" on:click = {() => settingPage = false}>Go Back</Button>
+                        Server Overview
+                        <Button variant = "outline" on:click = {() => settingPage = false} class = "ml-auto">Go Back</Button>
                     {/if}
                 </Card.Title>
             </Card.Header>
@@ -186,7 +204,28 @@
                         </Button>
                     </form>
                 {:else}
-                    <p>Setting page</p>
+                    <div class = "flex items-center">
+                        <label for = "image">
+                            {#if data.server.image == "none"}
+                                <div class = "w-[60px] h-[60px] text-2xl rounded-[50px] bg-muted mr-1 flex items-center justify-center text-white duration-100 cursor-pointer">
+                                    {data.server.name[0].toUpperCase()}
+                                </div>
+                            {:else}
+                                <img src = {data.server.image} alt = "{data.server.name}_image" class = "w-[50px] h-[50px] rounded-[50px] object-cover mr-1 cursor-pointer" />
+                            {/if}
+                        </label>
+                        <form on:change = {uploadImage}>
+                            <input name = "image" id = "image" type = "file" accept = ".jpg, .jpeg, .png" class = "hidden" />
+                        </form>
+                        <div class = "block ml-2.5">
+                            <Input value = {data.server.name} class = "text-lg w-fit" />
+                            <p class = "text-muted-foreground mt-1">
+                                {data.server.members.length} Member{data.server.members.length == 1 ? "" : "s"}
+                                <span class = "mx-2.5">|</span>
+                                {data.server.messages.length} Message{data.server.messages.length == 1 ? "" : "s"}
+                            </p>
+                        </div>
+                    </div>
                 {/if}
             </Card.Content>
         </Card.Root>
@@ -211,15 +250,15 @@
                     <Sheet.Root>
                         <Sheet.Trigger>
                             <div class = "flex items-center hover:text-muted-foreground duration-100">
-                                <img src = "/profiles/default.png" width = "20" height = "20" alt = "pfp" class = "rounded-[50px] mr-2" />
-                                <p>{member}</p> <!-- show all letters when in normal viewport -->
+                                <img src = {member.profile} width = "20" height = "20" alt = "pfp" class = "rounded-[50px] mr-2" />
+                                <p>{member.alias}</p> <!-- show all letters when in normal viewport -->
                             </div>
                         </Sheet.Trigger>
                         <Sheet.Content>
                             <Sheet.Header>
                                 <Sheet.Title class = "flex items-center">
-                                    <img src = "/profiles/default.png" width = "30" height = "30" alt = "pfp" class = "rounded-[50px] mr-2" />
-                                    {member}
+                                    <img src = {member.profile} width = "30" height = "30" alt = "pfp" class = "rounded-[50px] mr-2" />
+                                    {member.alias}
                                 </Sheet.Title>
                                 <Sheet.Description>
                                     Status asdfksldfs;fldaksjdflsd;falsdkf

@@ -28,6 +28,7 @@
     "@sveltejs/adapter-node": "^5.0.1",
     "@types/express": "^4.17.21",
     "bits-ui": "^0.21.10",
+    "cloudinary": "^2.2.0",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",

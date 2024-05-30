@@ -21,8 +21,8 @@ export async function load({ params, cookies }) {
         }));
 
         server[0].members = await Promise.all(await server[0].members.map(async (member) => {
-            const parsedUser = await db`SELECT alias FROM atom_users WHERE id = ${member};`;
-            return parsedUser[0].alias;
+            const parsedUser = await db`SELECT profile, alias FROM atom_users WHERE id = ${member};`;
+            return { profile: parsedUser[0].profile, alias: parsedUser[0].alias };
         }));
         
         return {

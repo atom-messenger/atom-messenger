@@ -6,7 +6,7 @@
 </script>
 
 <SheetPrimitive.Title
-	class={cn("text-lg font-semibold text-foreground", className)}
+	class={cn("text-2xl font-semibold text-foreground", className)}
 	{...$$restProps}
 >
 	<slot />
