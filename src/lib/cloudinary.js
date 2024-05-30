@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
+import fs from "node:fs";
 import { PRIVATE_CLOUDINARY_CLOUD_NAME, PRIVATE_CLOUDINARY_API_KEY, PRIVATE_CLOUDINARY_API_SECRET } from "$env/static/private";
 
 cloudinary.config({
@@ -11,6 +12,8 @@ cloudinary.config({
 export async function upload_to_cloud(url, id) {    
     let res = cloudinary.uploader.upload(url, { public_id: id });
     res = await res;
+
+    fs.unlinkSync(url);
     
     return res.url;
 }

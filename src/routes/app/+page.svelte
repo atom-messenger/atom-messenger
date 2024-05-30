@@ -1,42 +1,14 @@
 <script>
-    import { fetch_api } from "$lib/utils";
-    import * as Dialog from "@components/ui/dialog";
-    import { Input } from "@components/ui/input";
-    import { Button } from "@components/ui/button";
-    import ServerButton from "@components/server-button.svelte";
+    import * as Card from "@components/ui/card";
 
     export let data;
-    
-    let error = "";
-    let creating = "Create";
-
-    async function createServer(e) {
-        error = "";
-        creating = "Creating…";
-
-        if (e.target.name.value == "") {
-            error = "Server name is required.";
-            creating = "Create";
-        } else {
-            const res = await fetch_api("/api/server/create", {
-                name: e.target.name.value
-            });
-            
-            if (res.error) {
-                error = res.error;
-                creating = "Create";
-            } else {
-                window.location.href = `/app/${res.server}`;
-            }
-        }
-    }
 </script>
 
 <svelte:head>
     <title>Home | Atom</title>
 </svelte:head>
 
-<div class = "flex items-center justify-center border-2 border-white my-2.5 px-1.5 py-1.5 ">
+<!-- <div class = "flex items-center justify-center border-2 border-white my-2.5 px-1.5 py-1.5 ">
     <Dialog.Root>
         <Dialog.Trigger>
             <ServerButton name = "Create Server" />
@@ -59,4 +31,14 @@
         </a>
     {/each}
 </div>
-<p class = "text-center">My Friends</p>
+<p class = "text-center">My Friends</p>-->
+<Card.Root class = "{data.main} mr-7">
+    <Card.Header class = "border-b mb-2.5">
+        <Card.Title>
+            My Friends
+        </Card.Title>
+    </Card.Header>
+    <Card.Content>
+        wtf now
+    </Card.Content>
+</Card.Root>
