@@ -106,7 +106,7 @@
         <Card.Content class = "lg:block lg:text-center flex justify-center">
             <Dialog.Root>
                 <Dialog.Trigger>
-                    <ServerButton name = "Create Server" className = "lg:mb-2" />
+                    <ServerButton name = "Create Server" className = "lg:mb-2.5" />
                 </Dialog.Trigger>
                 <Dialog.Content>
                     <Dialog.Header>

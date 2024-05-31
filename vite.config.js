@@ -11,6 +11,9 @@ const webSocketServer = {
 		const io = new Server(server.httpServer)
 
 		io.on("connection", (socket) => {
+			socket.on("test", () => {
+				console.log("received");
+			})
 			socket.on("message", async (msg) => {
 				const author = await db`SELECT id, alias FROM atom_users WHERE id = ${msg.author};`;
 

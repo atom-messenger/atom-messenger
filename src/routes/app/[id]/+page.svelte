@@ -9,8 +9,6 @@
     import * as Sheet from "$lib/components/ui/sheet";
 
     export let data;
-  
-    const socket = io();
 
     let messages = data.server ? [...data.server.messages] : [];
     let error = "";
@@ -18,23 +16,32 @@
 
     onMount(() => {
         document.getElementById("feed").scrollTop = document.getElementById("feed").scrollHeight;
-    });
 
-    socket.on(`msg_${data.server ? data.server.id : null}`, (msg) => {
-        messages.push(msg);
-        messages = messages;
+        const socket = io();
+        
+        socket.on(`msg_${data.server ? data.server.id : null}`, (msg) => {
+            messages.push(msg);
+            messages = messages;
 
-        const feedElement = document.getElementById("feed");
-        const observer = new MutationObserver(() => {
-            feedElement.scrollTop = feedElement.scrollHeight;
+            const feedElement = document.getElementById("feed");
+            const observer = new MutationObserver(() => {
+                feedElement.scrollTop = feedElement.scrollHeight;
+            });
+            observer.observe(feedElement, { childList: true });
         });
-        observer.observe(feedElement, { childList: true });
     });
 
     // send a message to the server
-    function send(e) {
-        socket.emit("message", { server: data.server.id, author: data.user.id, text: e.target.message.value });
-        e.target.message.value = "";
+    async function send(e) {
+        const res = await fetch_api("/api/user/send", {
+            server: data.server.id,
+            author: data.user.id,
+            text: e.target.message.value
+        });
+
+        if (res.success) {
+            e.target.message.value = "";
+        }
     }
 
     // leaving a server if user isn't the owner
