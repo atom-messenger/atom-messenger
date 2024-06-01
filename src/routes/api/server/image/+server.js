@@ -8,7 +8,7 @@ export async function POST({ request }) {
 
     let img = formData.image;
     img = img.replace(/^data:image\/\w+;base64,/, "");
-    img = Buffer.from(img, 'base64');
+    img = Buffer.from(img, "base64");
 
     let id = uuidv4()
     

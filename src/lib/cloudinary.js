@@ -15,5 +15,5 @@ export async function upload_to_cloud(url, id) {
 
     fs.unlinkSync(url);
     
-    return res.url;
+    return res.secure_url;
 }

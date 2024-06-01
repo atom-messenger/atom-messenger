@@ -16,8 +16,8 @@ export async function load({ params, cookies }) {
         }
 
         server[0].messages = await Promise.all(await server[0].messages.map(async (msg) => {
-            const parsedUser = await db`SELECT alias FROM atom_users WHERE id = ${msg.author};`;
-            return { author: parsedUser[0].alias, text: msg.text };
+            const parsedUser = await db`SELECT profile, alias FROM atom_users WHERE id = ${msg.author};`;
+            return { profile: parsedUser[0].profile, author: parsedUser[0].alias, text: msg.text };
         }));
 
         server[0].members = await Promise.all(await server[0].members.map(async (member) => {

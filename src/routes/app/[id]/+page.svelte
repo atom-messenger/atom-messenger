@@ -1,6 +1,6 @@
 <script>
-    import { io } from "socket.io-client";
     import { onMount } from "svelte";
+    import Pusher from "pusher-js";
     import { fetch_api } from "$lib/utils";
     import { Button } from "@components/ui/button";
     import { Input } from "@components/ui/input";
@@ -14,12 +14,17 @@
     let error = "";
     let settingPage = false;
 
+    // scrolling to the bottom of the feed and lisetening for new messages
     onMount(() => {
         document.getElementById("feed").scrollTop = document.getElementById("feed").scrollHeight;
 
-        const socket = io();
-        
-        socket.on(`msg_${data.server ? data.server.id : null}`, (msg) => {
+        const pusher = new Pusher("587113dc1c1846385c6f", {
+            cluster: "us3"
+        });
+
+        const channel = pusher.subscribe(`message_${data.server.id}`);
+
+        channel.bind("message", function(msg) {
             messages.push(msg);
             messages = messages;
 
@@ -33,15 +38,13 @@
 
     // send a message to the server
     async function send(e) {
-        const res = await fetch_api("/api/user/send", {
+        await fetch_api("/api/user/send", {
             server: data.server.id,
             author: data.user.id,
             text: e.target.message.value
         });
 
-        if (res.success) {
-            e.target.message.value = "";
-        }
+        e.target.message.value = "";
     }
 
     // leaving a server if user isn't the owner
@@ -125,17 +128,6 @@
                                     <path d = "M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
                                 </svg>
                             </DropdownMenu.Item>
-                            <DropdownMenu.Item on:click = {async () => await fetch_api("/api/server/delete", { server: data.server.id }, "/")} class = "text-red-500">
-                                Delete
-                                <svg xmlns = "http://www.w3.org/2000/svg" width = "16" height = "16" viewBox = "0 0 24 24" fill = "none" stroke = "currentColor" stroke-width = "2" stroke-linecap = "round" stroke-linejoin = "round" class = "ml-auto">
-                                    <path stroke = "none" d = "M0 0h24v24H0z" fill = "none" />
-                                    <path d = "M4 7l16 0" />
-                                    <path d = "M10 11l0 6" />
-                                    <path d = "M14 11l0 6" />
-                                    <path d = "M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                    <path d = "M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                </svg>
-                            </DropdownMenu.Item>
                         {:else}
                             <DropdownMenu.Item on:click = {leave} class = "text-red-500">
                                 Leave
@@ -158,10 +150,10 @@
     </Card.Header>
     <Card.Content>
         {#if settingPage == false}
-            <div id = "feed" class = "overflow-auto border rounded-[0.3rem] px-2.5 py-2.5 h-[60vh] mb-5">
+            <div id = "feed" class = "overflow-auto border rounded-lg px-2.5 py-2.5 h-[60vh] mb-5">
                 {#each messages as msg}
-                    <div class = "flex w-full mb-1 h-fit px-2.5 py-2.5 rounded-[0.3rem] hover:bg-secondary">
-                        <img src = "/profiles/default.png" alt = "User Profile" class = "w-[25px] h-[25px] rounded-[50px] mr-2" />
+                    <div class = "flex w-full mb-1 h-fit px-2.5 py-2.5 rounded-lg hover:bg-secondary">
+                        <img src = {msg.profile} alt = "User Profile" class = "w-[25px] h-[25px] rounded-[50px] mr-2" />
                         <div class = "block mr-auto">
                             <p class = "text-muted-foreground">{msg.author}</p>
                             {msg.text}
@@ -217,6 +209,17 @@
                         <span class = "mx-2.5">|</span>
                         {data.server.messages.length} Message{data.server.messages.length == 1 ? "" : "s"}
                     </p>
+                </div>
+            </div>
+            <div class = "border-2 border-red-500 mt-16 p-10 rounded-lg">
+                <h1 class = "text-xl text-red-500 mb-5">Danger Zone</h1>
+                <div class = "flex items-center">
+                    <Button on:click = {async () => await fetch_api("/api/server/delete", { server: data.server.id }, "/")} variant = "destructive">
+                        Delete Server
+                    </Button>
+                    <Button on:click = {async () => await fetch_api("/api/server/purge", { server: data.server.id }, "/")} variant = "destructive" class = "ml-2">
+                        Purge Messages
+                    </Button>
                 </div>
             </div>
         {/if}

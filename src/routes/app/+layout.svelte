@@ -51,10 +51,10 @@
             </svg>
             Atom
         </h1>
-        <ul class = "font-medium flex flex-col rounded-[0.3rem] md:flex-row md:space-x-8 rtl:space-x-reverse">
+        <ul class = "font-medium flex flex-col rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse">
             <DropdownMenu.Root>
                 <DropdownMenu.Trigger>
-                    <li class = "block rounded-[0.3rem] px-3 py-2 cursor-pointer duration-100 text-primary-foreground bg-primary hover:bg-primary/90">
+                    <li class = "block rounded-lg px-3 py-2 cursor-pointer duration-100 text-primary-foreground bg-primary hover:bg-primary/90">
                         My Account
                     </li>
                 </DropdownMenu.Trigger>
@@ -105,8 +105,8 @@
         </Card.Header>
         <Card.Content class = "lg:block lg:text-center flex justify-center">
             <Dialog.Root>
-                <Dialog.Trigger>
-                    <ServerButton name = "Create Server" className = "lg:mb-2.5" />
+                <Dialog.Trigger class = "lg:mb-2.5">
+                    <ServerButton name = "Create Server" />
                 </Dialog.Trigger>
                 <Dialog.Content>
                     <Dialog.Header>
@@ -128,7 +128,7 @@
         </Card.Content>
     </Card.Root>
     <!-- this container is for making the server list sidebar same width throughout -->
-    <div class = "w-full flex h-full">
+    <div class = "lg:w-full lg:flex lg:h-full block">
         <slot />
     </div>
 </div>

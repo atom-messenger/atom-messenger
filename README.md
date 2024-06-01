@@ -1,4 +1,5 @@
 ## Todo
+    GET RID OF PUSHER AND USE PURE WEBSOCKETS INSTEAD
     Auth
         (DONE) Logging in
         (DONE) Logout
@@ -17,7 +18,7 @@
         (DONE) Leave Server
         Server Settings
             (DONE) Delete Server
-            Server Images
+            (DONE) Server Images
             Purge Messages
             Edit Server
         Add Channels
