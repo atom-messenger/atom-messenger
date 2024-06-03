@@ -9,7 +9,7 @@ export async function POST({ request, cookies }) {
     if (server.length === 0) {
         return json({ error: "Server does not exist" });
     } else if (server[0].owner !== cookies.get("sid")) {
-        return json({ error: "You do not own this server" });
+        return json({ error: "You are not the server owner." });
     } else {
         // Delete server
         server[0].members.forEach(async member => {

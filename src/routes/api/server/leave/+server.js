@@ -16,7 +16,6 @@ export async function POST({ request, cookies }) {
 
         return json({ success: true });
     } catch (e) {
-        console.log(e)
         return json({ error: e.message });
     }
 }

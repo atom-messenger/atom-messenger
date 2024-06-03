@@ -28,7 +28,7 @@
                 error = res.error;
                 creating = "Create";
             } else {
-                window.location.href = `/app/${res.server}`;
+                window.location.href = `/app/servers/${res.server}`;
             }
         }
     }
@@ -39,31 +39,62 @@
     }
 </script>
 
-<!-- top navbar for branding/navigating around user's account -->
-<nav class = "bg-transparent mb-2.5">
-    <div class = "max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <h1 class = "flex items-center text-2xl font-semibold rtl:space-x-reverse">
-            <svg xmlns = "http://www.w3.org/2000/svg" width = "30" height = "30" viewBox = "0 0 24 24" fill = "none" stroke = "currentColor" stroke-width = "2" stroke-linecap = "round" stroke-linejoin = "round"  class = "mr-1">
-                <path stroke = "none" d = "M0 0h24v24H0z" fill = "none"/>
-                <path d = "M12 12v.01" class = "stroke-primary" />
-                <path d = "M19.071 4.929c-1.562 -1.562 -6 .337 -9.9 4.243c-3.905 3.905 -5.804 8.337 -4.242 9.9c1.562 1.561 6 -.338 9.9 -4.244c3.905 -3.905 5.804 -8.337 4.242 -9.9" />
-                <path d = "M4.929 4.929c-1.562 1.562 .337 6 4.243 9.9c3.905 3.905 8.337 5.804 9.9 4.242c1.561 -1.562 -.338 -6 -4.244 -9.9c-3.905 -3.905 -8.337 -5.804 -9.9 -4.242" />
-            </svg>
-            Atom
-        </h1>
-        <ul class = "font-medium flex flex-col rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse">
+<!-- container holding sidebars and main content -->
+<div class = "mb-10" />
+<div class = "lg:flex lg:items-center lg:justify-center lg:h-[85vh] lg:m-0 m-5">
+    <!-- server list sidebar -->
+    <div class = "block h-full">
+        <Card.Root class = "lg:w-28 lg:h-[93%] rounded-b-none {data.side}">
+            <Card.Header class = "border-b mb-2">
+                <a href = "/app">
+                    <Card.Title class = "flex items-center cursor-pointer duration-100 hover:text-muted-foreground">
+                        <svg xmlns = "http://www.w3.org/2000/svg" width = "30" height = "30" viewBox = "0 0 24 24" fill = "none" stroke = "currentColor" stroke-width = "2" stroke-linecap = "round" stroke-linejoin = "round"  class = "m-auto">
+                            <path stroke = "none" d = "M0 0h24v24H0z" fill = "none"/>
+                            <path d = "M12 12v.01" class = "stroke-primary" />
+                            <path d = "M19.071 4.929c-1.562 -1.562 -6 .337 -9.9 4.243c-3.905 3.905 -5.804 8.337 -4.242 9.9c1.562 1.561 6 -.338 9.9 -4.244c3.905 -3.905 5.804 -8.337 4.242 -9.9" />
+                            <path d = "M4.929 4.929c-1.562 1.562 .337 6 4.243 9.9c3.905 3.905 8.337 5.804 9.9 4.242c1.561 -1.562 -.338 -6 -4.244 -9.9c-3.905 -3.905 -8.337 -5.804 -9.9 -4.242" />
+                        </svg>
+                    </Card.Title>
+                </a>
+            </Card.Header>
+            <Card.Content class = "lg:block lg:text-center flex justify-center">
+                <Dialog.Root>
+                    <Dialog.Trigger class = "lg:mb-2.5">
+                        <ServerButton name = "Create Server" />
+                    </Dialog.Trigger>
+                    <Dialog.Content>
+                        <Dialog.Header>
+                            <Dialog.Title>Create a Server</Dialog.Title>
+                            <Dialog.Description>Where you and your friends can hangout and chat.</Dialog.Description>
+                        </Dialog.Header>
+                        <form on:submit|preventDefault = {createServer} autoComplete = "off" class = "flex">
+                            <Input type = "text" name = "name" placeholder = "Server Name…" class = "mr-2" />
+                            <Button type = "submit">{creating}</Button>
+                        </form>
+                        <p class = "text-red-500 text-center">{error}</p>
+                    </Dialog.Content>
+                </Dialog.Root>
+                {#each data.user.joined as server}
+                    <a data-sveltekit-reload href = "/app/servers/{server.id}" class = "block lg:mb-2">
+                        <ServerButton image = {server.image} name = {server.name} />
+                    </a>
+                {/each}
+            </Card.Content>
+        </Card.Root>
+        <Card.Root class = "lg:w-28 lg:h-[7%] lg:border-t-0 lg:rounded-t-none lg:flex lg:flex lg:justify-center hidden {data.side}">
             <DropdownMenu.Root>
                 <DropdownMenu.Trigger>
-                    <li class = "block rounded-lg px-3 py-2 cursor-pointer duration-100 text-primary-foreground bg-primary hover:bg-primary/90">
-                        My Account
-                    </li>
+                    <div class = "flex items-center">
+                        <img src = {data.user.profile} alt = "pfp" class = "w-[20px] h-[20px] rounded-[50px] mr-1" />
+                        {data.user.username.substring(0, 8)}...
+                    </div>
                 </DropdownMenu.Trigger>
                 <DropdownMenu.Content>
                     <DropdownMenu.Label class = "flex">
-                        {data.user.alias}
+                        {data.user.status ? data.user.status : "No status"}
                     </DropdownMenu.Label>
                     <DropdownMenu.Separator />
-                    <a href = "/settings">
+                    <a href = "/app/@me">
                         <DropdownMenu.Item class = "cursor-pointer">
                             Settings
                             <svg xmlns = "http://www.w3.org/2000/svg" width = "16" height = "16" viewBox = "0 0 24 24" fill = "none" stroke = "currentColor" stroke-width = "2" stroke-linecap = "round" stroke-linejoin = "round" class = "ml-auto">
@@ -84,49 +115,8 @@
                     </DropdownMenu.Item>
                 </DropdownMenu.Content>
             </DropdownMenu.Root>
-        </ul>
+        </Card.Root>
     </div>
-</nav>
-
-<!-- container holding sidebars and main content -->
-<div class = "lg:flex lg:items-center lg:justify-center lg:h-[85vh] lg:m-0 m-5 mb-10">
-    <!-- server list sidebar -->
-    <Card.Root class = "lg:w-32 {data.side}">
-        <Card.Header class = "border-b mb-2">
-            <a href = "/">
-                <Card.Title class = "flex items-center cursor-pointer duration-100 hover:text-muted-foreground">
-                    <svg xmlns = "http://www.w3.org/2000/svg" width = "20" height = "20" viewBox = "0 0 24 24" fill = "none" stroke = "currentColor" stroke-width = "2" stroke-linecap = "round" stroke-linejoin = "round" class = "m-auto">
-                        <path stroke = "none" d = "M0 0h24v24H0z" fill = "none" />
-                        <path d = "M21 14l-3 -3h-7a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1h9a1 1 0 0 1 1 1v10" />
-                        <path d = "M14 15v2a1 1 0 0 1 -1 1h-7l-3 3v-10a1 1 0 0 1 1 -1h2" />
-                    </svg>
-                </Card.Title>
-            </a>
-        </Card.Header>
-        <Card.Content class = "lg:block lg:text-center flex justify-center">
-            <Dialog.Root>
-                <Dialog.Trigger class = "lg:mb-2.5">
-                    <ServerButton name = "Create Server" />
-                </Dialog.Trigger>
-                <Dialog.Content>
-                    <Dialog.Header>
-                        <Dialog.Title>Create a Server</Dialog.Title>
-                        <Dialog.Description>Where you and your friends can hangout and chat.</Dialog.Description>
-                    </Dialog.Header>
-                    <form on:submit|preventDefault = {createServer} autoComplete = "off" class = "flex">
-                        <Input type = "text" name = "name" placeholder = "Server Name…" class = "mr-2" />
-                        <Button type = "submit">{creating}</Button>
-                    </form>
-                    <p class = "text-red-500 text-center">{error}</p>
-                </Dialog.Content>
-            </Dialog.Root>
-            {#each data.user.joined as server}
-                <a data-sveltekit-reload href = "/app/{server.id}" class = "block lg:mb-2">
-                    <ServerButton image = {server.image} name = {server.name} />
-                </a>
-            {/each}
-        </Card.Content>
-    </Card.Root>
     <!-- this container is for making the server list sidebar same width throughout -->
     <div class = "lg:w-full lg:flex lg:h-full block">
         <slot />

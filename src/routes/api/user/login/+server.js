@@ -6,8 +6,8 @@ export async function POST({ request, cookies }) {
     const formData = await request.json();
 
     try {
-        if (formData.alias != "" && formData.password != "") {
-            const user = await db`SELECT * FROM atom_users WHERE alias = ${formData.alias} AND password = ${sha256(formData.password)};`;
+        if (formData.username != "" && formData.password != "") {
+            const user = await db`SELECT * FROM atom_users WHERE username = ${formData.username} AND password = ${sha256(formData.password)};`;
             
             if (user.length === 0) {
                 return json({ error: "Something went wrong." });

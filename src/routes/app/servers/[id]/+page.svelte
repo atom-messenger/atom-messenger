@@ -2,15 +2,17 @@
     import { onMount } from "svelte";
     import Pusher from "pusher-js";
     import { fetch_api } from "$lib/utils";
+    import Error from "@components/pages/404.svelte";
     import { Button } from "@components/ui/button";
     import { Input } from "@components/ui/input";
     import * as Card from "@components/ui/card";
     import * as DropdownMenu from "@components/ui/dropdown-menu";
-    import * as Sheet from "$lib/components/ui/sheet";
+    import * as Sheet from "@components/ui/sheet";
+    import * as Tooltip from "$lib/components/ui/tooltip";
 
     export let data;
 
-    let messages = data.server ? [...data.server.messages] : [];
+    let messages = data.server ? [...data.server.messages] : []
     let error = "";
     let settingPage = false;
 
@@ -76,28 +78,19 @@
 </script>
 
 <svelte:head>
-    <title>{data.server != null ? data.server.name : "Server Not Found"} | Atom</title>
+    <title>Atom | {data.server != null ? data.server.name : "Server Not Found"}</title>
 </svelte:head>
 
 {#if data.server == null}
-    <Card.Root class = "{data.main} mr-7 text-center">
-        <Card.Header>
-            <Card.Title class = "text-3xl">
-                404 Server Not Found
-            </Card.Title>
-        </Card.Header>
-        <Card.Content>
-            <p class = "text-muted-foreground">
-                Somehow your dumb ass got the server link wrong. Wtf now.
-            </p>
-        </Card.Content>
+    <Card.Root class = "{data.main} mr-7">
+        <Error />
     </Card.Root>
 {:else}
 <Card.Root class = {data.main}>
     <Card.Header>
         <Card.Title class = "flex items-center">
             {#if settingPage == false}
-                <span class = "mr-auto text-2xl">{data.server.name}</span>
+                <span class = "mr-auto">{data.server.name}</span>
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger>
                         <svg xmlns = "http://www.w3.org/2000/svg" width = "24" height = "24" viewBox = "0 0 24 24" fill = "none" stroke = "currentColor" stroke-width = "2" stroke-linecap = "round" stroke-linejoin = "round">
@@ -144,18 +137,18 @@
                 </DropdownMenu.Root>
             {:else}
                 Server Overview
-                <Button variant = "outline" on:click = {() => settingPage = false} class = "ml-auto">Go Back</Button>
+                <Button variant = "secondary" on:click = {() => settingPage = false} class = "ml-auto">Go Back</Button>
             {/if}
         </Card.Title>
     </Card.Header>
     <Card.Content>
         {#if settingPage == false}
-            <div id = "feed" class = "overflow-auto border rounded-lg px-2.5 py-2.5 h-[60vh] mb-5">
+            <div id = "feed" class = "overflow-auto border rounded px-2.5 py-2.5 h-[60vh] mb-5">
                 {#each messages as msg}
-                    <div class = "flex w-full mb-1 h-fit px-2.5 py-2.5 rounded-lg hover:bg-secondary">
+                    <div class = "flex w-full mb-1 h-fit px-2.5 py-2.5 rounded hover:bg-secondary">
                         <img src = {msg.profile} alt = "User Profile" class = "w-[25px] h-[25px] rounded-[50px] mr-2" />
                         <div class = "block mr-auto">
-                            <p class = "text-muted-foreground">{msg.author}</p>
+                            <p class = "text-muted-foreground">{msg.username}</p>
                             {msg.text}
                         </div>
                         <DropdownMenu.Root>
@@ -192,18 +185,20 @@
             <div class = "flex items-center">
                 <label for = "image">
                     {#if data.server.image == "none"}
-                        <div class = "w-[60px] h-[60px] text-2xl rounded-[50px] bg-muted mr-1 flex items-center justify-center text-white duration-100 cursor-pointer">
+                        <div class = "w-[60px] h-[60px] text-2xl rounded-[50px] bg-muted mr-1 flex items-center justify-center text-secondary-foreground duration-100 cursor-pointer">
                             {data.server.name[0].toUpperCase()}
                         </div>
                     {:else}
                         <img src = {data.server.image} alt = "{data.server.name}_image" class = "w-[50px] h-[50px] rounded-[50px] object-cover mr-1 cursor-pointer" />
                     {/if}
                 </label>
-                <form on:change = {uploadImage}>
-                    <input name = "image" id = "image" type = "file" accept = ".jpg, .jpeg, .png" class = "hidden" />
+                <form on:change|preventDefault = {uploadImage}>
+                    <input type = "file" name = "image" id = "image" accept = ".jpg, .jpeg, .png" class = "hidden" />
                 </form>
                 <div class = "block ml-2.5">
-                    <Input value = {data.server.name} class = "text-lg w-fit" />
+                    <form on:change|preventDefault = {async (e) => await fetch_api("/api/server/rename", { server: data.server.id, name: e.target.value }, `/app/servers/${data.server.id}`)}>
+                        <Input type = "text" value = {data.server.name} class = "text-lg w-fit" />
+                    </form>
                     <p class = "text-muted-foreground mt-1">
                         {data.server.members.length} Member{data.server.members.length == 1 ? "" : "s"}
                         <span class = "mx-2.5">|</span>
@@ -211,13 +206,13 @@
                     </p>
                 </div>
             </div>
-            <div class = "border-2 border-red-500 mt-16 p-10 rounded-lg">
+            <div class = "border-2 border-red-500 mt-16 p-10 rounded">
                 <h1 class = "text-xl text-red-500 mb-5">Danger Zone</h1>
-                <div class = "flex items-center">
+                <div class = "sm:flex sm:items-center block">
                     <Button on:click = {async () => await fetch_api("/api/server/delete", { server: data.server.id }, "/")} variant = "destructive">
                         Delete Server
                     </Button>
-                    <Button on:click = {async () => await fetch_api("/api/server/purge", { server: data.server.id }, "/")} variant = "destructive" class = "ml-2">
+                    <Button on:click = {async () => await fetch_api("/api/server/purge", { server: data.server.id }, `/app/servers/${data.server.id}`)} variant = "destructive" class = "sm:ml-2 sm:mt-0 mt-5">
                         Purge Messages
                     </Button>
                 </div>
@@ -245,21 +240,36 @@
         {#each data.server.members as member}
             <Sheet.Root>
                 <Sheet.Trigger>
-                    <div class = "flex items-center hover:text-muted-foreground duration-100">
-                        <img src = {member.profile} width = "20" height = "20" alt = "pfp" class = "rounded-[50px] mr-2" />
-                        <p>{member.alias}</p> <!-- show all letters when in normal viewport -->
-                    </div>
+                    <Tooltip.Root>
+                        <Tooltip.Trigger>
+                            <div class = "flex items-center hover:text-muted-foreground duration-100">
+                                <img src = {member.profile} alt = "pfp" class = "w-[20px] h-[20px] rounded-[50px] border mr-1" />
+                                <p>
+                                    {member.display_name ? member.display_name : member.username}
+                                </p>
+                            </div>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content>
+                            {member.status ? member.status : "No status available"}
+                        </Tooltip.Content>
+                    </Tooltip.Root>
                 </Sheet.Trigger>
                 <Sheet.Content>
                     <Sheet.Header>
                         <Sheet.Title class = "flex items-center">
-                            <img src = {member.profile} width = "30" height = "30" alt = "pfp" class = "rounded-[50px] mr-2" />
-                            {member.alias}
+                            <img src = {member.profile} alt = "pfp" class = "w-[50px] h-[50px] rounded-[50px] border mr-2" />
+                            <p>
+                                {member.display_name ? member.display_name : member.username}
+                                <span class = "block font-normal text-muted-foreground text-sm">{member.username}</span>
+                            </p>
                         </Sheet.Title>
-                        <Sheet.Description>
-                            Status asdfksldfs;fldaksjdflsd;falsdkf
+                        <Sheet.Description class = "text-lg">
+                            • {member.status ? member.status : "No status available"}
                         </Sheet.Description>
                     </Sheet.Header>
+                    <h2 class = "mt-5 text-lg">
+                        {member.bio}
+                    </h2>
                 </Sheet.Content>
             </Sheet.Root>
         {/each}

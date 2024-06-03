@@ -13,11 +13,10 @@ export async function POST({ request }) {
         useTLS: true
     });
 
-    const author = await db`SELECT alias, profile FROM atom_users WHERE id = ${formData.author};`;
+    const author = await db`SELECT username, profile FROM atom_users WHERE id = ${formData.author};`;
 
     pusher.trigger(`message_${formData.server}`, "message", {
-        profile: author[0].profile,
-        author: author[0].alias,
+        ...author[0],
         text: formData.text
     });
 

@@ -7,6 +7,11 @@ export async function POST({ request, cookies }) {
         const formData = await request.json();
 
         const id = uuidv4();
+
+        if (formData.name.endsWith(" ")) {
+            return json({ error: "Server name cannot end with a space." })
+        }
+        
         await db`INSERT INTO atom_servers (id, name, owner) VALUES (${id}, ${formData.name}, ${cookies.get("sid")});`;
 
         return json({ server: id });
