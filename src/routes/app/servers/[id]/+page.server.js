@@ -1,4 +1,6 @@
+import CryptoJS from "crypto-js";
 import { db } from "$lib/postgres";
+import { PRIVATE_CRYPTO_KEY } from "$env/static/private";
 
 export async function load({ params, cookies }) {
     try {
@@ -16,7 +18,10 @@ export async function load({ params, cookies }) {
 
         server[0].messages = await Promise.all(await server[0].messages.map(async (msg) => {
             const parsedUser = await db`SELECT profile, username FROM atom_users WHERE id = ${msg.author};`;
-            return { ...parsedUser[0], text: msg.text };
+
+            const bytes = CryptoJS.AES.decrypt(msg.text, PRIVATE_CRYPTO_KEY);
+
+            return { ...parsedUser[0], text: bytes.toString(CryptoJS.enc.Utf8) };
         }));
 
         server[0].members = await Promise.all(await server[0].members.map(async (member) => {
@@ -28,6 +33,7 @@ export async function load({ params, cookies }) {
             server: server[0]
         }
     } catch (e) {
+        console.log(e)
         return {
             server: null
         }

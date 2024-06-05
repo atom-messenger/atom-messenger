@@ -1,6 +1,8 @@
 import Pusher from "pusher";
 import { json } from "@sveltejs/kit";
+import CryptoJS from "crypto-js";
 import { db } from "$lib/postgres"
+import { PRIVATE_CRYPTO_KEY } from "$env/static/private";
 
 export async function POST({ request }) {
     const formData = await request.json();
@@ -22,7 +24,7 @@ export async function POST({ request }) {
 
     const server = await db`SELECT id, messages FROM atom_servers WHERE id = ${formData.server};`;
     server[0].messages.push({
-        text: formData.text.replaceAll(`"`, `\"`),
+        text: CryptoJS.AES.encrypt(formData.text.replaceAll(`"`, `\"`), PRIVATE_CRYPTO_KEY).toString(),
         author: formData.author
     });
 

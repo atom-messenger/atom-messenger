@@ -6,8 +6,8 @@ export async function load({ url, cookies }) {
     if (cookies.get("sid")) {
         const user = await db`SELECT * FROM atom_users WHERE id = ${cookies.get("sid")};`;
 
-        if (user.length === 0 && url.pathname != "/" && url.pathname != "/login") {
-            redirect(302, "/login");
+        if (user.length === 0 && url.pathname != "/" && url.pathname != "/auth") {
+            redirect(302, "/auth");
         } else if (url.pathname == "/") {
             redirect(302, "/app");
         } else {
@@ -15,7 +15,7 @@ export async function load({ url, cookies }) {
                 user: user[0]
             }
         }
-    } else if (url.pathname != "/" && url.pathname != "/login") {
-        redirect(302, "/login");
+    } else if (url.pathname != "/" && url.pathname != "/auth") {
+        redirect(302, "/auth");
     }
 }

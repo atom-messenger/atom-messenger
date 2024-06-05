@@ -12,7 +12,7 @@
 
     export let data;
 
-    let messages = data.server ? [...data.server.messages] : []
+    let messages = data.server ? [...data.server.messages] : [];
     let error = "";
     let settingPage = false;
 
@@ -27,7 +27,7 @@
         const channel = pusher.subscribe(`message_${data.server.id}`);
 
         channel.bind("message", function(msg) {
-            messages.push(msg);
+            messages = [...messages, msg];
             messages = messages;
 
             const feedElement = document.getElementById("feed");
@@ -143,12 +143,12 @@
     </Card.Header>
     <Card.Content>
         {#if settingPage == false}
-            <div id = "feed" class = "overflow-auto border rounded px-2.5 py-2.5 h-[60vh] mb-5">
-                {#each messages as msg}
-                    <div class = "flex w-full mb-1 h-fit px-2.5 py-2.5 rounded hover:bg-secondary">
-                        <img src = {msg.profile} alt = "User Profile" class = "w-[25px] h-[25px] rounded-[50px] mr-2" />
-                        <div class = "block mr-auto">
-                            <p class = "text-muted-foreground">{msg.username}</p>
+            <div id = "feed" class = "overflow-auto border rounded px-2.5 py-2 h-[60vh] mb-5">
+                {#each messages as msg, i}
+                    <div class = "flex w-full h-fit px-2.5 py-2.5 rounded hover:bg-secondary">
+                        <img src = {msg.profile} alt = "User Profile" class = "w-[25px] h-[25px] rounded-[50px] mr-2 {messages[i-1] ? messages[i-1].username == msg.username ? "hidden" : "" : ""}" />
+                        <div class = "block mr-auto {messages[i-1] ? messages[i-1].username == msg.username ? "ml-[32px]" : "" : ""}">
+                            <p class = "text-muted-foreground {messages[i-1] ? messages[i-1].username == msg.username ? "hidden" : "" : ""}">{msg.username}</p>
                             {msg.text}
                         </div>
                         <DropdownMenu.Root>
@@ -184,7 +184,7 @@
         {:else}
             <div class = "flex items-center">
                 <label for = "image">
-                    {#if data.server.image == "none"}
+                    {#if data.server.image == ""}
                         <div class = "w-[60px] h-[60px] text-2xl rounded-[50px] bg-muted mr-1 flex items-center justify-center text-secondary-foreground duration-100 cursor-pointer">
                             {data.server.name[0].toUpperCase()}
                         </div>

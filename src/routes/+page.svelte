@@ -37,7 +37,7 @@
                             The modern messaging app that keeps you connected with your friends
                         </p>
                     </div>
-                    <a href = "/login">
+                    <a href = "/auth">
                         <Button>Get Started</Button>
                     </a>
                 </div>

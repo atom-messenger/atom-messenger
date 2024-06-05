@@ -14,7 +14,7 @@ export async function upload(image) {
     img = img.replace(/^data:image\/\w+;base64,/, "");
     img = Buffer.from(img, "base64");
 
-    let id = uuidv4()
+    const id = uuidv4()
     
     fs.writeFileSync(`static/profiles/${id}.jpg`, img, "utf-8");
     

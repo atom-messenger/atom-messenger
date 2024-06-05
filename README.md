@@ -3,7 +3,7 @@
     Auth
         (DONE) Logging in
         (DONE) Logout
-        Signing Up
+        (DONE) Signing Up
     User
         (DONE) When sending messages, save ID instead of username
         (DONE) Profile Picture
@@ -11,7 +11,7 @@
             First upload to custom /static folder
             Then use the temporary url to UPLOAD to cloudinary
         (DONE) Account Settings
-        (DONE) User info in shadcn sheets
+        (DONE) User info in sheets
         Adding Friends
     Server
         (DONE) Create Server
@@ -21,7 +21,7 @@
             (DONE) Server Images
             (DONE) Purge Messages
             (DONE) Change Server Name
-        Get rid of latency in sending messages
-        Add Channels
+        (DONE) Encrypt all messages
+        (DONE) Make messages not render a user profile each time
     Frontend
         Redo landing page (https://v0.dev/r/J6rbr3j6kul) reference

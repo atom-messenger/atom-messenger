@@ -35,7 +35,7 @@
 
     async function logout() {
         await fetch("/api/user/logout");
-        window.location.href = "/login";
+        window.location.href = "/auth";
     }
 </script>
 
