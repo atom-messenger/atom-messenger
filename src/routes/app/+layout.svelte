@@ -37,8 +37,6 @@
         await fetch("/api/user/logout");
         window.location.href = "/auth";
     }
-
-    console.log(data.user.joined);
 </script>
 
 <!-- container holding sidebars and main content -->

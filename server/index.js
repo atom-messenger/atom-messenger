@@ -27,7 +27,6 @@ io.on("connection", async socket => {
 // https://github.com/sveltejs/kit/tree/master/packages/adapter-node#custom-server
 app.use(handler);
 
-server.listen(port, async () => { 
-    console.log(await db`SELECT * FROM atom_users;`);
+server.listen(port, () => { 
     console.log(`Production build running on http://localhost:${port}`)
 });
