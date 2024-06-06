@@ -12,6 +12,12 @@
             Then use the temporary url to UPLOAD to cloudinary
         (DONE) Account Settings
         (DONE) User info in sheets
+        In signing up, email verification w/ nodemailer/resend
+        User Settings
+            Change Display Name
+            Change Username
+            Change Password
+            Change Email
         Adding Friends
     Server
         (DONE) Create Server

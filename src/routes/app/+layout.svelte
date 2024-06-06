@@ -37,6 +37,8 @@
         await fetch("/api/user/logout");
         window.location.href = "/auth";
     }
+
+    console.log(data.user.joined);
 </script>
 
 <!-- container holding sidebars and main content -->
@@ -77,7 +79,7 @@
                 {#each data.user.joined as server}
                     <a data-sveltekit-reload href = "/app/servers/{server.id}" class = "block lg:mb-2">
                         <ServerButton image = {server.image} name = {server.name} />
-                    </a>
+                    </a> <!-- data-sveltekit-reload -->
                 {/each}
             </Card.Content>
         </Card.Root>

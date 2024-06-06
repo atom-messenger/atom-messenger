@@ -28,7 +28,7 @@ export async function POST({ request }) {
         author: formData.author
     });
 
-    await db`UPDATE atom_servers SET messages = ${server[0].messages} WHERE id = ${server[0].id};`;
+    // await db`UPDATE atom_servers SET messages = ${server[0].messages} WHERE id = ${server[0].id};`;
 
     return json({ success: true });
 }

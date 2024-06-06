@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import Pusher from "pusher-js";
+    import { io } from "socket.io-client";
     import { fetch_api } from "$lib/utils";
     import Error from "@components/pages/404.svelte";
     import { Button } from "@components/ui/button";
@@ -16,30 +17,30 @@
     let error = "";
     let settingPage = false;
 
-    // scrolling to the bottom of the feed and lisetening for new messages
-    onMount(() => {
-        document.getElementById("feed").scrollTop = document.getElementById("feed").scrollHeight;
+    const socket = io();
 
-        const pusher = new Pusher("587113dc1c1846385c6f", {
-            cluster: "us3"
+    // scrolling to the bottom of the feed onload
+    onMount(() => document.getElementById("feed").scrollTop = document.getElementById("feed").scrollHeight);
+
+    socket.on(`message_${data.server.id}`, msg => {
+        messages.push(msg);
+        messages = messages;
+
+        const feedElement = document.getElementById("feed");
+        const observer = new MutationObserver(() => {
+            feedElement.scrollTop = feedElement.scrollHeight;
         });
-
-        const channel = pusher.subscribe(`message_${data.server.id}`);
-
-        channel.bind("message", function(msg) {
-            messages = [...messages, msg];
-            messages = messages;
-
-            const feedElement = document.getElementById("feed");
-            const observer = new MutationObserver(() => {
-                feedElement.scrollTop = feedElement.scrollHeight;
-            });
-            observer.observe(feedElement, { childList: true });
-        });
+        observer.observe(feedElement, { childList: true });
     });
 
     // send a message to the server
     async function send(e) {
+        socket.emit("message", {
+            server: data.server.id,
+            author: data.user.id,
+            text: e.target.message.value
+        });
+
         await fetch_api("/api/user/send", {
             server: data.server.id,
             author: data.user.id,
