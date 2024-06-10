@@ -18,10 +18,10 @@ export async function POST({ request, cookies }) {
                 cookies.set("sid", user[0].id, { path: "/" });
                 
                 sendMail({
-                    sender: "no-reply (Atom Messenger)",
+                    sender: "no-reply (Atom)",
                     recipient: user[0].email,
                     subject: `Login Notification for ${user[0].email}`,
-                    html: `<p style = "font-family: verdana;">Someone has logged into your Atom Messenger account, <u>${user[0].username}</u>. If this was not you, please contact us immediately.</p>`
+                    html: `<p style = "font-family: verdana;">Someone has logged into your Atom account, <u>${user[0].username}</u>. If this was not you, please contact us immediately.</p>`
                 });
                 
                 return json({

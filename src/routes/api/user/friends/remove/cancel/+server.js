@@ -1,6 +1,7 @@
 import { json } from "@sveltejs/kit";
 import { db } from "$lib/postgres";
 import { sendMail } from "$lib/nodemailer";
+import { PUBLIC_URL } from "$env/static/public";
 
 export async function POST({ request, cookies }) {
     try {
@@ -25,10 +26,10 @@ export async function POST({ request, cookies }) {
             await db`UPDATE atom_users SET outgoing_requests = ${friend[0].outgoing_requests} WHERE id = ${friend[0].id};`;
 
             sendMail({
-                sender: "no-reply (Atom Messenger)",
+                sender: "no-reply (Atom)",
                 recipient: friend[0].email,
                 subject: `${user[0].username} has denied your friend request`,
-                html: `<p style = "font-family: verdana;"><a href = "https://atom-zw9z.onrender.com/u/${user[0].username}">${user[0].username}</a> denied your friend request. Better luck next time!</p>`
+                html: `<p style = "font-family: verdana;"><a href = "${PUBLIC_URL}/u/${user[0].username}">${user[0].username}</a> denied your friend request. Better luck next time!</p>`
             });
         }
 

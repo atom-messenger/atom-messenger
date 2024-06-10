@@ -3,6 +3,8 @@ import { sha256 } from "js-sha256";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "$lib/postgres";
 import { sendMail } from "$lib/nodemailer";
+import { PRIVATE_INVITE_KEY } from "$env/static/private";
+import { PUBLIC_URL } from "$env/static/public";
 
 export async function POST({ request }) {
     const formData = await request.json();
@@ -28,7 +30,7 @@ export async function POST({ request }) {
                 return json({
                     error: "Passwords do not match."
                 });
-            } else if (formData.earlyAccess != "dqtkplon99825"){
+            } else if (formData.earlyAccess != PRIVATE_INVITE_KEY){
                 return json({
                     error: "Invalid early access code."
                 });
@@ -38,10 +40,10 @@ export async function POST({ request }) {
                 await db`INSERT INTO atom_users (id, email, username, password, role) VALUES(${id}, ${formData.email.toLowerCase()}, ${formData.username.toLowerCase()}, ${sha256(formData.password)}, 'pending');`;
                 
                 sendMail({
-                    sender: "no-reply (Atom Messenger)",
+                    sender: "no-reply (Atom)",
                     recipient: formData.email.toLowerCase(),
-                    subject: `Sign Up at Atom Messenger for ${formData.email.toLowerCase()}`,
-                    html: `<p style = "font-family: verdana;">Your email was used to sign up for an Atom Messenger account. Please click <a href = "http://localhost:5173/v?id=${id}">here<a/> to verify your email to your account.<br><br>If this wasn't you, please ignore this email.</p>`
+                    subject: `Sign Up at Atom for ${formData.email.toLowerCase()}`,
+                    html: `<p style = "font-family: verdana;">Your email was used to sign up for an Atom account. Please click <a href = "${PUBLIC_URL}/v?id=${id}">here<a/> to verify your email to your account.<br><br>If this wasn't you, please ignore this email.</p>`
                 });
                 
                 return json({

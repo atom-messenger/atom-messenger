@@ -28,5 +28,5 @@ io.on("connection", async socket => {
 app.use(handler);
 
 server.listen(port, () => { 
-    console.log(`Production build running on http://localhost:${port}`)
+    console.log(`Production build running on ::${port}`);
 });

@@ -47,7 +47,7 @@ export const flyAndScale = (
 	};
 };
 
-export async function fetch_api(url, content, redirect_page) {
+export async function fetch_api(url, content, redirect_page, headers) {
 	const res = await fetch(url, {
 		method: "POST",
 		headers: {

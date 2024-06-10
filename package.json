@@ -27,6 +27,7 @@
     "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@sveltejs/adapter-node": "^5.0.1",
     "@types/express": "^4.17.21",
+    "axios": "^1.7.2",
     "bits-ui": "^0.21.10",
     "cloudinary": "^2.2.0",
     "clsx": "^2.1.1",

@@ -1,6 +1,7 @@
 import { json } from "@sveltejs/kit";
 import { db } from "$lib/postgres";
 import { sendMail } from "$lib/nodemailer";
+import { PUBLIC_URL } from "$env/static/public";
 
 export async function POST({ request, cookies }) {
     try {
@@ -36,10 +37,10 @@ export async function POST({ request, cookies }) {
                     await db`UPDATE atom_users SET incoming_requests = ${[user[0].id, ...friend[0].incoming_requests]} WHERE id = ${friend[0].id};`;
     
                     sendMail({
-                        sender: "no-reply (Atom Messenger)",
+                        sender: "no-reply (Atom)",
                         recipient: friend[0].email,
                         subject: `${user[0].username} has requested to be your friend!`,
-                        html: `<p style = "font-family: verdana;">Go to your <a href = "https://atom-zw9z.onrender.com/app">Atom Messenger dashboard</a> to accept their friend request!</p>`
+                        html: `<p style = "font-family: verdana;">Go to your <a href = "${PUBLIC_URL}/app">Atom dashboard</a> to accept their friend request!</p>`
                     });
 
                     return json({

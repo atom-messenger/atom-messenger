@@ -1,7 +1,10 @@
 ## Todo
+    Atom: a combination of reddit (upvotes/downvotes & karma), discord (servers), instagram (stories), twitter (microblogging shit)
+
     General
         (DONE) GET RID OF PUSHER AND USE PURE WEBSOCKETS INSTEAD
         (DONE) Add UUIDs to each message
+        Replace jsdeliver at `app.html`
         Add more user security (socket listening to logins, logging out of other devices)
         Add microblogging/posts to main page for users to share statuses
         Maybe add IG stories alternative to main page too?
