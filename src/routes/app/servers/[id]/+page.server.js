@@ -9,11 +9,8 @@ export async function load({ params, cookies }) {
         if (server[0].members.includes(cookies.get("sid")) == false) {
             const user = await db`SELECT username, joined FROM atom_users WHERE id = ${cookies.get("sid")};`;
 
-            user[0].joined.push(server[0].id);
-            server[0].members.push(cookies.get("sid"));
-
-            await db`UPDATE atom_users SET joined = ${user[0].joined} WHERE id = ${cookies.get("sid")};`;
-            await db`UPDATE atom_servers SET members = ${server[0].members} WHERE id = ${server[0].id};`;
+            await db`UPDATE atom_users SET joined = ${[server[0].id, ...user[0].joined]} WHERE id = ${cookies.get("sid")};`;
+            await db`UPDATE atom_servers SET members = ${[cookies.get("sid"), ...server[0].members]} WHERE id = ${server[0].id};`;
         }
 
         server[0].messages = await Promise.all(await server[0].messages.map(async (msg) => {
@@ -33,7 +30,6 @@ export async function load({ params, cookies }) {
             server: server[0]
         }
     } catch (e) {
-        console.log(e)
         return {
             server: null
         }

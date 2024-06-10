@@ -14,12 +14,12 @@ const webSocketServer = {
 			socket.on("message", async msg => {
 				const user = await db`SELECT profile, username FROM atom_users WHERE id = ${msg.author};`;
 
-				socket.emit(`message_${msg.server}`, {
+				io.emit(`message_${msg.server}`, {
 					// broadcast message back to all clients
 					profile: user[0].profile,
 					username: user[0].username,
 					text: msg.text
-				})
+				});
 			});
 		});
 	}

@@ -10,11 +10,17 @@ export async function POST({ request, cookies }) {
         if (server[0].owner == cookies.get("sid")) {
             await db`UPDATE atom_servers SET messages = '[]' WHERE id = ${server[0].id};`;
 
-            return json({ success: true });
+            return json({
+                success: true
+            });
         } else {
-            return json({ error: "You are not the server owner." });
+            return json({
+                error: "You are not the server owner."
+            });
         }
     } catch (e) {
-        return json({ error: e.message });
+        return json({
+            error: e.message
+        });
     }
 }

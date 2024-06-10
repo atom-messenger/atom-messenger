@@ -35,7 +35,7 @@
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <span on:click = {() => showEmail = !showEmail} class = "cursor-pointer duration-100 hover:text-muted-foreground">
                 {#if showEmail == false}
-                    {"*".repeat(user.email.split("@")[0].length)}@gmail.com
+                    {"*".repeat(user.email.split("@")[0].length)}@{user.email.split("@")[1]}
                 {:else}
                     {user.email}
                 {/if}

@@ -1,21 +1,23 @@
 <script>
     import { onMount } from "svelte";
-    import Pusher from "pusher-js";
     import { io } from "socket.io-client";
     import { fetch_api } from "$lib/utils";
     import Error from "@components/pages/404.svelte";
+    import EmojiPicker from "@components/emoji-picker.svelte";
     import { Button } from "@components/ui/button";
     import { Input } from "@components/ui/input";
     import * as Card from "@components/ui/card";
     import * as DropdownMenu from "@components/ui/dropdown-menu";
     import * as Sheet from "@components/ui/sheet";
     import * as Tooltip from "$lib/components/ui/tooltip";
+    import * as Popover from "$lib/components/ui/popover";
 
     export let data;
 
     let messages = data.server ? [...data.server.messages] : [];
     let error = "";
     let settingPage = false;
+    let msgBox = "";
 
     const socket = io();
 
@@ -23,7 +25,7 @@
     onMount(() => document.getElementById("feed").scrollTop = document.getElementById("feed").scrollHeight);
 
     socket.on(`message_${data.server.id}`, msg => {
-        messages.push(msg);
+        messages = [...messages, msg];
         messages = messages;
 
         const feedElement = document.getElementById("feed");
@@ -138,7 +140,9 @@
                 </DropdownMenu.Root>
             {:else}
                 Server Overview
-                <Button variant = "secondary" on:click = {() => settingPage = false} class = "ml-auto">Go Back</Button>
+                <Button variant = "secondary" on:click = {() => settingPage = false} class = "ml-auto">
+                    Go Back
+                </Button>
             {/if}
         </Card.Title>
     </Card.Header>
@@ -173,7 +177,23 @@
             </div>
             <p class = "text-red-500 mb-2">{error}</p>
             <form on:submit|preventDefault = {send} autoComplete = "off" class = "flex items-center m-auto">
-                <Input name = "message" placeholder = {`Message ${data.server.name}…`} class = "mr-2" />
+                <Input type = "text" name = "message" bind:value = {msgBox} placeholder = {`Message ${data.server.name}…`} />
+                <Popover.Root>
+                    <Popover.Trigger>
+                        <Button type = "button" variant = "outline" class = "mx-2">
+                            <svg xmlns = "http://www.w3.org/2000/svg" width = "20" height = "20" viewBox = "0 0 24 24" fill = "none" stroke = "currentColor" stroke-width = "2" stroke-linecap = "round" stroke-linejoin = "round">
+                                <path stroke = "none" d = "M0 0h24v24H0z" fill = "none" />
+                                <path d = "M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                                <path d = "M9 10l.01 0" />
+                                <path d = "M15 10l.01 0" />
+                                <path d = "M9.5 15a3.5 3.5 0 0 0 5 0" />
+                            </svg>
+                        </Button>
+                    </Popover.Trigger>
+                    <Popover.Content class = "p-0">
+                        <EmojiPicker on:emoji = {(e) => msgBox += e.detail} />
+                    </Popover.Content>
+                </Popover.Root>
                 <Button type = "submit" variant = "secondary">
                     <svg xmlns = "http://www.w3.org/2000/svg" width = "20" height = "20" viewBox = "0 0 24 24" fill = "none" stroke = "currentColor" stroke-width = "2" stroke-linecap = "round" stroke-linejoin = "round">
                         <path stroke = "none" d = "M0 0h24v24H0z" fill = "none" />

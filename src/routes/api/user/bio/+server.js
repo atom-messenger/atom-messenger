@@ -7,8 +7,12 @@ export async function POST({ request }) {
 
         await db`UPDATE atom_users SET bio = ${formData.bio} WHERE id = ${formData.id};`;
 
-        return json({ success: true });
+        return json({
+            success: true
+        });
     } catch (e) {
-        return json({ error: e.message });
+        return json({
+            error: e.message
+        });
     }
 }

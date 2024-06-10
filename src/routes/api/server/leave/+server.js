@@ -14,8 +14,12 @@ export async function POST({ request, cookies }) {
         await db`UPDATE atom_servers SET members = ${server[0].members} WHERE id = ${server[0].id};`;
         await db`UPDATE atom_users SET joined = ${user[0].joined} WHERE id = ${user[0].id};`;
 
-        return json({ success: true });
+        return json({
+            success: true
+        });
     } catch (e) {
-        return json({ error: e.message });
+        return json({
+            error: e.message
+        });
     }
 }

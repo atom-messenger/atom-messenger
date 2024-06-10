@@ -8,6 +8,7 @@
       page: true,
       loggingIn: "Login",
       signingUp: "Sign Up",
+      signedUp: false,
       error: ""
     }
 
@@ -38,7 +39,7 @@
         reactive.signingUp = "Sign Up";
         reactive.error = res.error;
       } else {
-        window.location.href = "/app";
+        reactive.signedUp = true;
       }
     }
 </script>
@@ -49,70 +50,76 @@
 
 <div class = "w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
   <div class = "flex items-center justify-center py-12">
-    <div class = "mx-auto grid w-[350px] gap-6">
-      <div class = "grid gap-2 text-center">
-        <h1 class = "text-3xl font-bold">
-          {reactive.page == true ? "Login to Atom" : "Sign Up for Atom"}
-        </h1>
-        <p class = "text-balance text-muted-foreground">
-          Access your Atom Messenger account
-        </p>
-      </div>
-      <div class = "grid gap-4">
-        {#if reactive.page == true}
-          <form on:submit|preventDefault = {login} autocomplete = "off">
-            <div class = "grid gap-2 mb-5">
-              <Label for = "username">Username</Label>
-              <Input type = "text" name = "username" placeholder = "john.doe" />
-            </div>
-            <div class = "grid gap-2 mb-5">
-              <div class = "flex items-center">
-                <Label for = "password">Password</Label>
-                <a href = "/forgot-password" class = "ml-auto inline-block text-sm text-muted-foreground underline hover:no-underline">
-                  Forgot your password?
-                </a>
+    {#if reactive.signedUp == false}
+      <div class = "mx-auto grid w-[350px] gap-6">
+        <div class = "grid gap-2 text-center">
+          <h1 class = "text-3xl font-bold">
+            {reactive.page == true ? "Login to Atom" : "Sign Up for Atom"}
+          </h1>
+          <p class = "text-balance text-muted-foreground">
+            Access your Atom Messenger account
+          </p>
+        </div>
+        <div class = "grid gap-4">
+          {#if reactive.page == true}
+            <form on:submit|preventDefault = {login} autocomplete = "off">
+              <div class = "grid gap-2 mb-5">
+                <Label for = "username">Username</Label>
+                <Input type = "text" name = "username" placeholder = "john.doe" />
               </div>
-              <Input type = "password" name = "password" placeholder = "********" />
-            </div>
-            <p class = "text-red-500 mb-2">{reactive.error}</p>
-            <Button type = "submit" class = "w-full">{reactive.loggingIn}</Button>
-          </form>
-        {:else}
-          <form on:submit|preventDefault = {signup} autocomplete = "off">
-            <div class = "grid gap-2 mb-5">
-              <Label for = "email">Email</Label>
-              <Input type = "email" name = "email" placeholder = "john.doe@gmail.com" />
-            </div>
-            <div class = "grid gap-2 mb-5">
-              <Label for = "username">Username</Label>
-              <Input type = "text" name = "username" placeholder = "john.doe" />
-            </div>
-            <div class = "grid gap-2 mb-5">
-              <Label for = "password">Password</Label>
-              <Input type = "password" name = "password" placeholder = "********" />
-            </div>
-            <div class = "grid gap-2 mb-5">
-              <Label for = "confirmPassword">Confirm Password</Label>
-              <Input type = "password" name = "confirmPassword" placeholder = "********" />
-            </div>
-            <div class = "grid gap-2 mb-5">
-              <Label for = "earlyAccess">Early Access Code</Label>
-              <Input type = "text" name = "earlyAccess" placeholder = "???" />
-            </div>
-            <p class = "text-red-500 mb-2">{reactive.error}</p>
-            <Button type = "submit" class = "w-full">{reactive.signingUp}</Button>
-          </form>
-        {/if}
+              <div class = "grid gap-2 mb-5">
+                <div class = "flex items-center">
+                  <Label for = "password">Password</Label>
+                  <a href = "/forgot-password" class = "ml-auto inline-block text-sm text-muted-foreground underline hover:no-underline">
+                    Forgot your password?
+                  </a>
+                </div>
+                <Input type = "password" name = "password" placeholder = "********" />
+              </div>
+              <p class = "text-red-500 mb-2">{reactive.error}</p>
+              <Button type = "submit" class = "w-full">{reactive.loggingIn}</Button>
+            </form>
+          {:else}
+            <form on:submit|preventDefault = {signup} autocomplete = "off">
+              <div class = "grid gap-2 mb-5">
+                <Label for = "email">Email</Label>
+                <Input type = "email" name = "email" placeholder = "john.doe@gmail.com" />
+              </div>
+              <div class = "grid gap-2 mb-5">
+                <Label for = "username">Username</Label>
+                <Input type = "text" name = "username" placeholder = "john.doe" />
+              </div>
+              <div class = "grid gap-2 mb-5">
+                <Label for = "password">Password</Label>
+                <Input type = "password" name = "password" placeholder = "********" />
+              </div>
+              <div class = "grid gap-2 mb-5">
+                <Label for = "confirmPassword">Confirm Password</Label>
+                <Input type = "password" name = "confirmPassword" placeholder = "********" />
+              </div>
+              <div class = "grid gap-2 mb-5">
+                <Label for = "earlyAccess">Early Access Code</Label>
+                <Input type = "text" name = "earlyAccess" placeholder = "???" />
+              </div>
+              <p class = "text-red-500 mb-2">{reactive.error}</p>
+              <Button type = "submit" class = "w-full">{reactive.signingUp}</Button>
+            </form>
+          {/if}
+        </div>
+        <div class = "mt-4 text-center text-sm">
+          {reactive.page == true ? "Don't have an account?" : "Already have an account?"}
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
+          <!-- svelte-ignore a11y-no-static-element-interactions -->
+          <span on:click = {() => reactive.page = !reactive.page} class = "underline cursor-pointer hover:no-underline">
+            {reactive.page == true ? "Sign up" : "Login"}
+          </span>
+        </div>
       </div>
-      <div class = "mt-4 text-center text-sm">
-        {reactive.page == true ? "Don't have an account?" : "Already have an account?"}
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <span on:click = {() => reactive.page = !reactive.page} class = "underline cursor-pointer hover:no-underline">
-          {reactive.page == true ? "Sign up" : "Login"}
-        </span>
-      </div>
-    </div>
+    {:else}
+      <p class = "text-green-500 text-center">
+        A verification email was sent to your email address
+      </p>
+    {/if}
   </div>
   <div class = "hidden bg-muted lg:block">
     <svg xmlns = "http://www.w3.org/2000/svg" width = "1920" height = "1800" viewBox = "0 0 24 24" fill = "none" stroke = "currentColor" stroke-width = "2" stroke-linecap = "round" stroke-linejoin = "round" class = "h-full w-full object-cover stroke-[#e0e0de] dark:stroke-[#3b3a3a]">

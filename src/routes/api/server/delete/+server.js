@@ -7,9 +7,13 @@ export async function POST({ request, cookies }) {
     const server = await db`SELECT id, owner, members FROM atom_servers WHERE id = ${formData.server};`;
 
     if (server.length === 0) {
-        return json({ error: "Server does not exist" });
+        return json({
+            error: "Server does not exist"
+        });
     } else if (server[0].owner !== cookies.get("sid")) {
-        return json({ error: "You are not the server owner." });
+        return json({
+            error: "You are not the server owner."
+        });
     } else {
         // Delete server
         server[0].members.forEach(async member => {
@@ -20,6 +24,8 @@ export async function POST({ request, cookies }) {
 
         await db`DELETE FROM atom_servers WHERE id = ${server[0].id};`;
 
-        return json({ success: true })
+        return json({
+            success: true
+        });
     }
 }

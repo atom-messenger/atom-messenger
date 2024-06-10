@@ -8,8 +8,12 @@ export async function POST({ request }) {
 
         await db`UPDATE atom_servers SET image = ${await upload(formData.image)} WHERE id = ${formData.server}`;
 
-        return json({ success: true });
+        return json({
+            success: true
+        });
     } catch (e) {
-        return json({ error: e.message });
+        return json({
+            error: e.message
+        });
     }
 }

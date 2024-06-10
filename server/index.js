@@ -19,7 +19,7 @@ io.on("connection", async socket => {
             profile: user[0].profile,
             username: user[0].username,
             text: msg.text
-        })
+        });
     });
 });
 

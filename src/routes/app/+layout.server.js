@@ -16,6 +16,27 @@ export async function load({ cookies }) {
         }
     }));
 
+    // parse all friends from ids to usernames
+    user[0].friends = await Promise.all(await user[0].friends.map(async (u) => {
+        const parsedUser = await db`SELECT username FROM atom_users WHERE id = ${u};`;
+
+        return parsedUser[0].username;
+    }));
+
+    // parse users from outgoing reuqests
+    user[0].outgoing_requests = await Promise.all(await user[0].outgoing_requests.map(async (u) => {
+        const parsedUser = await db`SELECT username FROM atom_users WHERE id = ${u};`;
+
+        return parsedUser[0].username;
+    }));
+
+    // parse users from incoming requests
+    user[0].incoming_requests = await Promise.all(await user[0].incoming_requests.map(async (u) => {
+        const parsedUser = await db`SELECT username FROM atom_users WHERE id = ${u};`;
+
+        return parsedUser[0].username;
+    }));
+
     return {
         user: user[0],
         main: "w-full h-full overflow-auto",

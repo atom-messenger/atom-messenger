@@ -15,7 +15,7 @@ export async function load({ url, cookies }) {
                 user: user[0]
             }
         }
-    } else if (url.pathname != "/" && url.pathname != "/auth") {
+    } else if (url.pathname != "/" && url.pathname != "/auth" && url.pathname.startsWith("/v") == false) {
         redirect(302, "/auth");
     }
 }
