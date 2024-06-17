@@ -66,7 +66,7 @@
             <form on:submit|preventDefault = {login} autocomplete = "off" class = "grid gap-4">
                 <div class = "grid gap-2">
                     <Label for = "username" class = "text-xs">USERNAME</Label>
-                    <Input type = "text" name = "username" placeholder = "john.doe" required />
+                    <Input type = "text" name = "username" placeholder = "john.doe" />
                 </div>
                 <div class = "grid gap-2">
                     <div class = "flex items-center">
@@ -75,14 +75,14 @@
                             Forgot your password?
                         </a>
                     </div>
-                    <Input type = "password" name = "password" placeholder = "********" required />
+                    <Input type = "password" name = "password" placeholder = "********" />
                 </div>
-                <p class = "text-red-500">Wrong password.</p>
+                <p class = "text-red-500">{reactive.error}</p>
                 <Button type = "submit" class = "w-full">
                     {reactive.loggingIn}
                 </Button>
             </form>
-            <p class = "text-center">or</p>
+            <p class = "text-center my-2">or</p>
             <a href = {PUBLIC_DISCORD_URL}>
                 <Button variant = "outline" class = "w-full bg-[#5865F2] text-white hover:bg-[#4251ed] hover:text-white">
                     <svg viewBox = "0 0 256 199" width = "19" height = "19" xmlns = "http://www.w3.org/2000/svg" preserveAspectRatio = "xMidYMid" class = "mr-2">
@@ -96,16 +96,16 @@
                 <div class = "grid grid-cols-2 gap-4">
                     <div class = "grid gap-2">
                         <Label for = "email">Email</Label>
-                        <Input type = "text" name = "email" placeholder = "john.doe@test.com" required />
+                        <Input type = "text" name = "email" placeholder = "john.doe@test.com" />
                     </div>
                     <div class = "grid gap-2">
                         <Label for = "username">Username</Label>
-                        <Input type = "text" name = "username" placeholder = "john.doe" required />
+                        <Input type = "text" name = "username" placeholder = "john.doe" />
                     </div>
                 </div>
                 <div class = "grid gap-2">
                     <Label for = "password">Password</Label>
-                    <Input type = "password" name = "password" placeholder = "********" required />
+                    <Input type = "password" name = "password" placeholder = "********" />
                 </div>
                 <div class = "grid gap-2">
                     <Label for = "password">Confirm Password</Label>
