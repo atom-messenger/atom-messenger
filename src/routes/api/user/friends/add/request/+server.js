@@ -33,8 +33,8 @@ export async function POST({ request, cookies }) {
                         error: "Friend request already sent"
                     });
                 } else {
-                    await db`UPDATE atom_users SET outgoing_requests = ${[friend[0].id, ...user[0].outgoing_requests]} WHERE id = ${user[0].id};`;
-                    await db`UPDATE atom_users SET incoming_requests = ${[user[0].id, ...friend[0].incoming_requests]} WHERE id = ${friend[0].id};`;
+                    await db`UPDATE atom_users SET outgoing_requests = ${[ friend[0].id, ...user[0].outgoing_requests ]} WHERE id = ${user[0].id};`;
+                    await db`UPDATE atom_users SET incoming_requests = ${[ user[0].id, ...friend[0].incoming_requests ]} WHERE id = ${friend[0].id};`;
     
                     sendMail({
                         sender: "no-reply (Atom)",

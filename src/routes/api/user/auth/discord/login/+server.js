@@ -29,9 +29,13 @@ export async function GET({ url, cookies }) {
                 }
             });
 
-            const user = await db`SELECT id FROM atom_users WHERE email = ${userInfo.data.email.toLowerCase()};`;
+            try {
+                const user = await db`SELECT id FROM atom_users WHERE email = ${userInfo.data.email.toLowerCase()};`;
 
-            cookies.set("sid", user[0].id, { path: "/" });
+                cookies.set("sid", user[0].id, { path: "/" });
+            } catch (e) {
+                redirect(302, "/auth");
+            }
 
             redirect(302, "/");
         }

@@ -7,12 +7,27 @@
 		<link rel = "preconnect" href = "https://fonts.googleapis.com" />
 		<link rel = "preconnect" href = "https://fonts.gstatic.com" crossorigin />
 		<link href = "https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel = "stylesheet" />
+		
+		<meta name = "title" content = "Atom" />
+		<meta name = "description" content = "The modern messaging app that keeps you connected with your friends" />
+
+		<meta property = "og:type" content = "website" />
+		<meta property = "og:url" content = "https://atom.obl.ong/" />
+
+		<meta property = "og:title" content = "Atom" />
+		<meta property = "og:description" content = "The modern messaging app that keeps you connected with your friends" />
+		  
+		<meta property = "twitter:card" content = "summary_large_image" />
+		<meta property = "twitter:url" content = "https://atom.obl.ong/" />
+		<meta property = "twitter:title" content = "Atom" />
+		<meta property = "twitter:description" content = "The modern messaging app that keeps you connected with your friends" />
+	
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data = "hover">
 		<div style = "display: contents;">
 			%sveltekit.body%
 		</div>
-		<script type = "module" src = "https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+		<script type = "module" src = "/emoji-picker/index.js"></script>
 	</body>
 </html>

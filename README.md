@@ -4,8 +4,8 @@
     General
         (DONE) GET RID OF PUSHER AND USE PURE WEBSOCKETS INSTEAD
         (DONE) Add UUIDs to each message
-        Replace jsdeliver at `app.html`
-        Add more user security (socket listening to logins, logging out of other devices)
+        (DONE) Replace jsdeliver at `app.html`
+        Redo auth page to center
         Add microblogging/posts to main page for users to share statuses
         Maybe add IG stories alternative to main page too?
     Auth
@@ -22,7 +22,8 @@
             (DONE) Then use the temporary url to UPLOAD to cloudinary
         (DONE) Account Settings
         (DONE) User info in sheets
-        Adding Friends
+        (DONE) Adding Friends
+        Banners
         User Settings
             Banners
             Change Display Name
@@ -39,3 +40,5 @@
             (DONE) Change Server Name
         (DONE) Encrypt all messages
         (DONE) Make messages not render a user profile each time
+        (DONE) After creating a server, reload but add owner server to their joined column and members column of server
+        (DONE) Make emoji popover change color depending on theme

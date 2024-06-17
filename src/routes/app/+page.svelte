@@ -6,6 +6,7 @@
     import * as Tooltip from "$lib/components/ui/tooltip";
     import { Input } from "@components/ui/input";
     import { Button } from "@components/ui/button";
+    import { Textarea } from "$lib/components/ui/textarea";
 
     export let data;
 
@@ -73,6 +74,9 @@
                                 Share a post with your friends!
                             </Dialog.Description>
                         </Dialog.Header>
+                        <Input placeholder = "Title" class = "border-none"/>
+                        <Textarea maxLength = "300" placeholder = "Whatchu doing?!" class = "border-none resize-none h-[150px]" />
+                        <Button>Post</Button>
                     </Dialog.Content>
                 </Dialog.Root>
             </div>

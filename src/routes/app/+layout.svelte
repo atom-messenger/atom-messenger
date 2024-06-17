@@ -27,8 +27,8 @@
             if (res.error) {
                 error = res.error;
                 creating = "Create";
-            } else {
-                window.location.href = `/app/servers/${res.server}`;
+            } else if (res.success) {
+                window.location.reload();
             }
         }
     }

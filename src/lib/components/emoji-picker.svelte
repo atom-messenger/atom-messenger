@@ -1,5 +1,6 @@
 <script>
     import { onMount, createEventDispatcher } from "svelte";
+    import { mode } from "mode-watcher";
     
     const dispatch = createEventDispatcher();
 
@@ -11,4 +12,4 @@
     });
 </script>
 
-<emoji-picker></emoji-picker>
+<emoji-picker class = {$mode}></emoji-picker>

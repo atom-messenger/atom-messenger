@@ -12,10 +12,10 @@ export async function POST({ request, cookies }) {
         friend[0].outgoing_requests.splice(friend[0].outgoing_requests.indexOf(user[0].id), 1);
 
         // update the user after accepting friend request
-        await db`UPDATE atom_users SET incoming_requests = ${user[0].incoming_requests}, friends = ${[friend[0].id, ...user[0].friends]} WHERE id = ${user[0].id};`;
+        await db`UPDATE atom_users SET incoming_requests = ${user[0].incoming_requests}, friends = ${[ friend[0].id, ...user[0].friends ]} WHERE id = ${user[0].id};`;
 
         // update the friend after accepting friend request
-        await db`UPDATE atom_users SET outgoing_requests = ${friend[0].outgoing_requests}, friends = ${[user[0].id, ...friend[0].friends]} WHERE id = ${friend[0].id};`;
+        await db`UPDATE atom_users SET outgoing_requests = ${friend[0].outgoing_requests}, friends = ${[ user[0].id, ...friend[0].friends ]} WHERE id = ${friend[0].id};`;
 
         return json({
             success: true

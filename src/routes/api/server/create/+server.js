@@ -13,13 +13,18 @@ export async function POST({ request, cookies }) {
                 error: "Server name cannot end with a space."
             });
         }
-        
-        await db`INSERT INTO atom_servers (id, name, owner) VALUES (${id}, ${formData.name}, ${cookies.get("sid")});`;
+
+        const user = await db`SELECT id, joined FROM atom_users WHERE id = ${cookies.get("sid")};`;
+
+        await db`INSERT INTO atom_servers (id, name, owner, members) VALUES (${id}, ${formData.name}, ${user[0].id}, ${[ user[0].id ]});`;
+        await db`UPDATE atom_users SET joined = ${[ id, ...user[0].joined ]} WHERE id = ${user[0].id};`;
 
         return json({
-            server: id
+            success: true
         });
     } catch (e) {
+        console.log(e);
+
         return json({
             error: e.message
         });
